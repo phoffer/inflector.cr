@@ -12,6 +12,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   inflector:
     github: phoffer/inflector.cr
+    version: "~> 0.1.1"
 ```
 
 Somewhere in your app initialization, `require "inflector"`.

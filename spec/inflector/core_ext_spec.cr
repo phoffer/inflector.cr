@@ -1,5 +1,5 @@
 require "../spec_helper"
-require "../../src/inflector/core_ext"
+require "../../src/core_ext"
 
 1.ordinalize                                # => "1st"
 2.ordinalize                                # => "2nd"

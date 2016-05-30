@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/inflector/core_ext"
+require "../src/core_ext"
 
 require "./inflector_test_cases"
 include InflectorTestCases
