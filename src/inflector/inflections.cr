@@ -1,18 +1,19 @@
 module Inflector
   extend self
 
+
   # A singleton instance of this class is yielded by Inflector.inflections,
   # which can then be used to specify additional inflection rules. If passed
   # an optional locale, rules for other languages can be specified. The
   # default locale is <tt>:en</tt>. Only rules for English are provided.
   #
   #   ActiveSupport::Inflector.inflections(:en) do |inflect|
-  #     inflect.plural /^(ox)$/i, '\1\2en'
-  #     inflect.singular /^(ox)en/i, '\1'
+  #     inflect.plural /^(ox)$/i, "\1\2en"
+  #     inflect.singular /^(ox)en/i, "\1"
   #
-  #     inflect.irregular 'octopus', 'octopi'
+  #     inflect.irregular "octopus", "octopi"
   #
-  #     inflect.uncountable 'equipment'
+  #     inflect.uncountable "equipment"
   #   end
   #
   # New rules are added at the top. So in the example above, the irregular
@@ -22,52 +23,6 @@ module Inflector
   class Inflections
     @@__instance__ = {} of Symbol => self
 
-    class Uncountables
-      def initialize
-        @regex_array = [] of (Regex | String)
-        @self_array  = [] of String
-      end
-
-      def delete(entry)
-        @regex_array.delete(to_regex(entry))
-      end
-
-      def <<(word : Array(String))
-        add(word)
-      end
-
-      def <<(word : String)
-        add(word)
-      end
-
-      def add(words : Array(String))
-        @self_array.concat(words.map &.downcase)
-        @regex_array += @self_array.map {|word|  to_regex(word) }
-        self
-      end
-      def add(words : String)
-        @self_array.push(words.downcase)
-        @regex_array += @self_array.map {|word|  to_regex(word) }
-        self
-      end
-
-      def uncountable?(str)
-        @regex_array.any? { |regex| regex === str }
-      end
-
-      def to_regex(string)
-        /\b#{::Regex.escape(string)}\Z/i
-      end
-
-      def size
-        @self_array.size
-      end
-
-      def each(&block)
-        @self_array.each{ |str| yield str }
-      end
-    end
-
     def self.instance(locale = :en)
       @@__instance__[locale] ||= new
     end
@@ -75,19 +30,19 @@ module Inflector
     getter :plurals, :singulars, :uncountables, :humans, :acronyms, :acronym_regex
 
     def initialize
-      @plurals       = [] of Array(Regex | String)
-      @singulars     = [] of Array(Regex | String)
-      @uncountables  = Uncountables.new
-      @humans        = [] of Array(Regex | String)
+      @plurals       = [] of {Regex, String}
+      @singulars     = [] of {Regex, String}
+      @uncountables  = [] of String
+      @humans        = [] of {Regex, String}
       @acronyms      = {} of String => String
       @acronym_regex = /(?=a)b/
     end
 
     # Private, for the test suite.
     def initialize_dup(orig) # :nodoc:
-      %w(plurals singulars uncountables humans acronyms acronym_regex).each do |scope|
-        instance_variable_set("@#{scope}", orig.send(scope).dup)
-      end
+      # %w(plurals singulars uncountables humans acronyms acronym_regex).each do |scope|
+      #   instance_variable_set("@#{scope}", orig.send(scope).dup)
+      # end
     end
 
     # Specifies a new acronym. An acronym must be specified as it will appear
@@ -97,48 +52,48 @@ module Inflector
     # the acronym when titleized or humanized, and will convert the acronym
     # into a non-delimited single lowercase word when passed to +underscore+.
     #
-    #   acronym 'HTML'
-    #   titleize 'html'     # => 'HTML'
-    #   camelize 'html'     # => 'HTML'
-    #   underscore 'MyHTML' # => 'my_html'
+    #   acronym "HTML"
+    #   titleize "html"     # => "HTML"
+    #   camelize "html"     # => "HTML"
+    #   underscore "MyHTML" # => "my_html"
     #
     # The acronym, however, must occur as a delimited unit and not be part of
     # another word for conversions to recognize it:
     #
-    #   acronym 'HTTP'
-    #   camelize 'my_http_delimited' # => 'MyHTTPDelimited'
-    #   camelize 'https'             # => 'Https', not 'HTTPs'
-    #   underscore 'HTTPS'           # => 'http_s', not 'https'
+    #   acronym "HTTP"
+    #   camelize "my_http_delimited" # => "MyHTTPDelimited"
+    #   camelize "https"             # => "Https", not "HTTPs"
+    #   underscore "HTTPS"           # => "http_s", not "https"
     #
-    #   acronym 'HTTPS'
-    #   camelize 'https'   # => 'HTTPS'
-    #   underscore 'HTTPS' # => 'https'
+    #   acronym "HTTPS"
+    #   camelize "https"   # => "HTTPS"
+    #   underscore "HTTPS" # => "https"
     #
     # Note: Acronyms that are passed to +pluralize+ will no longer be
     # recognized, since the acronym will not occur as a delimited unit in the
     # pluralized result. To work around this, you must specify the pluralized
     # form as an acronym as well:
     #
-    #    acronym 'API'
-    #    camelize(pluralize('api')) # => 'Apis'
+    #    acronym "API"
+    #    camelize(pluralize("api")) # => "Apis"
     #
-    #    acronym 'APIs'
-    #    camelize(pluralize('api')) # => 'APIs'
+    #    acronym "APIs"
+    #    camelize(pluralize("api")) # => "APIs"
     #
     # +acronym+ may be used to specify any word that contains an acronym or
     # otherwise needs to maintain a non-standard capitalization. The only
     # restriction is that the word must begin with a capital letter.
     #
-    #   acronym 'RESTful'
-    #   underscore 'RESTful'           # => 'restful'
-    #   underscore 'RESTfulController' # => 'restful_controller'
-    #   titleize 'RESTfulController'   # => 'RESTful Controller'
-    #   camelize 'restful'             # => 'RESTful'
-    #   camelize 'restful_controller'  # => 'RESTfulController'
+    #   acronym "RESTful"
+    #   underscore "RESTful"           # => "restful"
+    #   underscore "RESTfulController" # => "restful_controller"
+    #   titleize "RESTfulController"   # => "RESTful Controller"
+    #   camelize "restful"             # => "RESTful"
+    #   camelize "restful_controller"  # => "RESTfulController"
     #
-    #   acronym 'McDonald'
-    #   underscore 'McDonald' # => 'mcdonald'
-    #   camelize 'mcdonald'   # => 'McDonald'
+    #   acronym "McDonald"
+    #   underscore "McDonald" # => "mcdonald"
+    #   camelize "mcdonald"   # => "McDonald"
     def acronym(word)
       @acronyms[word.downcase] = word
       @acronym_regex = /#{@acronyms.values.join("|")}/
@@ -150,12 +105,11 @@ module Inflector
     # the rule.
     def plural(rule : Regex, replacement)
       @uncountables.delete(replacement)
-      @plurals.unshift([rule, replacement])
+      @plurals.unshift({rule, replacement})
     end
     def plural(rule : String, replacement)
-      @uncountables.delete(rule) # if rule.is_a?(String)
-      @uncountables.delete(replacement)
-      @plurals.unshift([rule, replacement])
+      @uncountables.delete(rule)
+      plural(Regex.new(rule), replacement)
     end
 
     # Specifies a new singularization rule and its replacement. The rule can
@@ -164,12 +118,11 @@ module Inflector
     # the rule.
     def singular(rule : Regex, replacement)
       @uncountables.delete(replacement)
-      @singulars.unshift([rule, replacement])
+      @singulars.unshift({rule, replacement})
     end
     def singular(rule : String, replacement)
-      @uncountables.delete(rule) # if rule.is_a?(String)
-      @uncountables.delete(replacement)
-      @singulars.unshift([rule, replacement])
+      @uncountables.delete(rule)
+      singular(Regex.new(rule), replacement)
     end
 
     # Specifies a new irregular that applies to both pluralization and
@@ -177,8 +130,8 @@ module Inflector
     # regular expressions. You simply pass the irregular in singular and
     # plural form.
     #
-    #   irregular 'octopus', 'octopi'
-    #   irregular 'person', 'people'
+    #   irregular "octopus", "octopi"
+    #   irregular "person", "people"
     def irregular(singular, plural)
       @uncountables.delete(singular)
       @uncountables.delete(plural)
@@ -210,28 +163,35 @@ module Inflector
 
     # Specifies words that are uncountable and should not be inflected.
     #
-    #   uncountable 'money'
-    #   uncountable 'money', 'information'
-    #   uncountable %w( money information rice )
-    def uncountable(words : Array(String))
-      words.each do |word|
-        @uncountables.add(word)
-      end
+    #   uncountable "money"
+    #   uncountable "money", "information"
+    #   uncountable %w[foo bar]
+    def uncountable(*words)
+      @uncountables += words.to_a.map(&.downcase)
     end
-    def uncountable(word : String)
-      @uncountables.add(word)
+
+    def uncountable(words : Array(String))
+      @uncountables += words.map(&.downcase)
+    end
+
+    def uncountable
+      @uncountables
     end
 
     # Specifies a humanized form of a string by a regular expression rule or
     # by a string mapping. When using a regular expression based replacement,
     # the normal humanize formatting is called after the replacement. When a
     # string is used, the human form should be specified as desired (example:
-    # 'The name', not 'the_name').
+    # "The name", not "the_name").
     #
-    #   human /_cnt$/i, '\\1_count'
-    #   human 'legacy_col_person_name', 'Name'
-    def human(rule, replacement)
-      @humans.unshift([rule, replacement])
+    #   human /_cnt$/i, "\1_count"
+    #   human "legacy_col_person_name", "Name"
+    def human(rule : Regex, replacement)
+      @humans.unshift({rule, replacement})
+    end
+    def human(rule : String, replacement)
+      rule = Regex.new(rule)
+      human(rule, replacement)
     end
 
     # Clears the loaded inflections within a given scope (default is
@@ -244,24 +204,20 @@ module Inflector
     def clear(scope = :all)
       case scope
       when :all
-        @plurals      = [] of Array(Regex | String)
-        @singulars    = [] of Array(Regex | String)
-        @uncountables = Uncountables.new
-        @humans       = [] of Array(Regex | String)
-        @acronyms     = {} of String => String
-      when :plurals, "plurals"
-        @plurals      = [] of Array(Regex | String)
-      when :singulars, "singulars"
-        @singulars    = [] of Array(Regex | String)
-      when :uncountables, "uncountables"
-        @uncountables = Uncountables.new
-      when :humans, "humans"
-        @humans       = [] of Array(Regex | String)
-      when :acronyms, "acronyms"
-        @acronyms     = {} of String => String
-      else
-        # I'm not sure if we can do this. At least, I don't know how in Crystal
-        # instance_variable_set "@#{scope}", [] of String
+        @plurals      = @plurals.clear
+        @singulars    = @singulars.clear
+        @uncountables = @uncountables.clear
+        @humans       = @humans.clear
+      when :plurals
+        @plurals      = @plurals.clear
+      when :singulars
+        @singulars    = @singulars.clear
+      when :uncountables
+        @uncountables = @uncountables.clear
+      when :humans
+        @humans       = @humans.clear
+      when :acronyms
+        @acronyms     = @acronyms.clear
       end
     end
   end
@@ -272,7 +228,7 @@ module Inflector
   # Only rules for English are provided.
   #
   #   ActiveSupport::Inflector.inflections(:en) do |inflect|
-  #     inflect.uncountable 'rails'
+  #     inflect.uncountable "rails"
   #   end
   def inflections(locale = :en, &block)
     yield Inflections.instance(locale)
@@ -281,5 +237,3 @@ module Inflector
     Inflections.instance(locale)
   end
 end
-
-

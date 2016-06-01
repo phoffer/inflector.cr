@@ -72,25 +72,23 @@ describe "Inflector" do
     end
 
     SingularToPlural.each do |singular, plural|
-      #################### THIS IS NOT WORKING ####################
-      # it "singularize '#{plural}' should == '#{singular}'" do
-      #   (Inflector.singularize(plural)).should            eq(singular)
-      #   (Inflector.singularize(plural.capitalize)).should eq(singular.capitalize)
-      # end
+      it "singularize '#{plural}' should == '#{singular}'" do
+        (Inflector.singularize(plural)).should            eq(singular)
+        (Inflector.singularize(plural.capitalize)).should eq(singular.capitalize)
+      end
     end
   end
 
-  #################### THIS IS NOT WORKING ####################
   SingularToPlural.each do |singular, plural|
-    # it "pluralizing #{plural} should not change" do
-    #   (Inflector.pluralize(plural)).should                eq(plural)
-    #   (Inflector.pluralize(plural.capitalize)).should     eq(plural.capitalize)
-    # end
+    it "pluralizing #{plural} should not change" do
+      (Inflector.pluralize(plural)).should                eq(plural)
+      (Inflector.pluralize(plural.capitalize)).should     eq(plural.capitalize)
+    end
 
-    # it "singularizing #{singular} should not change" do
-    #   (Inflector.singularize(singular)).should            eq(singular)
-    #   (Inflector.singularize(singular.capitalize)).should eq(singular.capitalize)
-    # end
+    it "singularizing #{singular} should not change" do
+      (Inflector.singularize(singular)).should            eq(singular)
+      (Inflector.singularize(singular.capitalize)).should eq(singular.capitalize)
+    end
   end
 
 

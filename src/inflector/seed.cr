@@ -7,7 +7,6 @@ require "./inflections"
 # This is a safety measure to keep existing applications from breaking.
 #++
 Inflector.inflections(:en) do |inflect|
-  # inflect.plural(/[^s]$/, "\\1s")
   inflect.plural(/$/, "s")
   inflect.plural(/s$/i, "s")
   inflect.plural(/^(ax|test)is$/i, "\\1es")

@@ -36,12 +36,12 @@ module Inflector
   # singularized using rules defined for that language. By default,
   # this parameter is set to <tt>:en</tt>.
   #
-  #   singularize("posts")            # => "post"
-  #   singularize("octopi")           # => "octopus"
-  #   singularize("sheep")            # => "sheep"
-  #   singularize("word")             # => "word"
-  #   singularize("CamelOctopi")      # => "CamelOctopus"
-  #   singularize("leyes", :es)       # => "ley"
+  #   singularize('posts')            # => "post"
+  #   singularize('octopi')           # => "octopus"
+  #   singularize('sheep')            # => "sheep"
+  #   singularize('word')             # => "word"
+  #   singularize('CamelOctopi')      # => "CamelOctopus"
+  #   singularize('leyes', :es)       # => "ley"
   def singularize(word, locale = :en)
     apply_inflections(word, inflections(locale).singulars)
   end
@@ -65,14 +65,13 @@ module Inflector
   def camelize(term, uppercase_first_letter = true)
     string = term.to_s
     if uppercase_first_letter
-      string = string.sub(/^[a-z\d]*/) { |match| inflections.acronyms[match]? || match.capitalize }
+      string = string.gsub(/^[a-z\d]*/) { |s| inflections.acronyms[s]? || s.capitalize }
     else
-      string = string.sub(/^(?:#{inflections.acronym_regex}(?=\b|[A-Z_])|\w)/) { |match| match.downcase }
+      string = string.gsub(/^(?:#{inflections.acronym_regex}(?=\b|[A-Z_])|\w)/) { |s| s.downcase }
     end
-    string = string.gsub(/(?:_|(\/))([a-z\d]*)/i) { |match| "#{match[0]}#{inflections.acronyms[match[1..-1]]? || (match[1..-1].capitalize)}" }
-    string = string.gsub("/", "::")
-    string = string.gsub("_", "")
     string
+      .gsub(/(?:_|(\/))([a-z\d]*)/i) { |s, m| "#{m[1]?}#{inflections.acronyms[m[2]]? || m[2].capitalize}" }
+      .gsub("/", "::")
   end
 
   # Makes an underscored, lowercase form from the expression in the string.
@@ -88,13 +87,14 @@ module Inflector
   #   camelize(underscore("SSLError"))  # => "SslError"
   def underscore(camel_cased_word)
     return camel_cased_word unless camel_cased_word =~ /[A-Z-]|::/
-    word = camel_cased_word.to_s.gsub("::", "/")
-    word = word.gsub(/(?:(?<=([A-Za-z\d]))|\b)(#{inflections.acronym_regex})(?=\b|[^a-z])/) { |match| "#{'_' if !word.downcase.starts_with?(match.downcase)}#{match.downcase}" }
-    word = word.gsub(/([A-Z\d]+)([A-Z][a-z])/, "\\1_\\2")
-    word = word.gsub(/([a-z\d])([A-Z])/, "\\1_\\2")
-    word = word.gsub(/\W_/) { |match| match[0] }
-    word = word.tr("-", "_")
-    word.downcase
+
+    camel_cased_word
+      .gsub("::", "/")
+      .gsub(/(?:(?<=([A-Za-z\d]))|\b)(#{inflections.acronym_regex})(?=\b|[^a-z])/) { |s, m| "#{m[1]? && "_"}#{m[2].downcase}" }
+      .gsub(/([A-Z\d]+)([A-Z][a-z])/) { |s, m| "#{m[1]}_#{m[2]}" }
+      .gsub(/([a-z\d])([A-Z])/) { |s, m| "#{m[1]}_#{m[2]}" }
+      .tr("-", "_")
+      .downcase
   end
 
   # Tweaks an attribute name for display to end users.
@@ -121,21 +121,19 @@ module Inflector
   #   humanize("ssl_error") # => "SSL error"
   #
   def humanize(lower_case_and_underscored_word, capitalize = true)
-    original = lower_case_and_underscored_word.to_s
-    result = original
+    result = lower_case_and_underscored_word.to_s
 
-    inflections.humans.find do |arr, _|
-      rule, replacement = arr
-      result = original.sub(rule, replacement)
-      result != original
+    inflections.humans.find do |rule_and_replacement|
+      rule, replacement = rule_and_replacement
+      if result[rule]?
+        result = result.gsub(rule, replacement)
+      end
     end
 
-    result = result.sub(/\A_+/, "")
-    result = result.sub(/_id\z/, "")
-    result = result.tr("_", " ")
+    result = result.gsub(/\A_+/, "").gsub(/_id\z/, "").tr("_", " ")
 
     result = result.gsub(/([a-z\d]*)/i) do |match|
-      "#{inflections.acronyms[match]? || match.downcase}"
+      inflections.acronyms.fetch(match, match.downcase)
     end
 
     if capitalize
@@ -163,10 +161,10 @@ module Inflector
   #
   # +titleize+ is also aliased as +titlecase+.
   #
-  #   titleize("man from the boondocks")   # => "Man From The Boondocks"
-  #   titleize("x-men: the last stand")    # => "X Men: The Last Stand"
-  #   titleize("TheManWithoutAPast")       # => "The Man Without A Past"
-  #   titleize("raiders_of_the_lost_ark")  # => "Raiders Of The Lost Ark"
+  #   titleize('man from the boondocks')   # => "Man From The Boondocks"
+  #   titleize('x-men: the last stand')    # => "X Men: The Last Stand"
+  #   titleize('TheManWithoutAPast')       # => "The Man Without A Past"
+  #   titleize('raiders_of_the_lost_ark')  # => "Raiders Of The Lost Ark"
   def titleize(word)
     humanize(underscore(word)).gsub(/\b(?<!['’`])[a-z]/) { |match| match.capitalize }
   end
@@ -174,9 +172,9 @@ module Inflector
   # Creates the name of a table like Rails does for models to table names.
   # This method uses the #pluralize method on the last word in the string.
   #
-  #   tableize("RawScaledScorer") # => "raw_scaled_scorers"
-  #   tableize("ham_and_egg")     # => "ham_and_eggs"
-  #   tableize("fancyCategory")   # => "fancy_categories"
+  #   tableize('RawScaledScorer') # => "raw_scaled_scorers"
+  #   tableize('egg_and_ham')     # => "egg_and_hams"
+  #   tableize('fancyCategory')   # => "fancy_categories"
   def tableize(class_name)
     pluralize(underscore(class_name))
   end
@@ -185,12 +183,12 @@ module Inflector
   # names to models. Note that this returns a string and not a Class (To
   # convert to an actual class follow +classify+ with #constantize).
   #
-  #   classify("ham_and_eggs") # => "HamAndEgg"
+  #   classify("egg_and_hams") # => "EggAndHam"
   #   classify("posts")        # => "Post"
   #
   # Singular names are not handled correctly:
   #
-  #   classify("calculus")     # => "Calculus"
+  #   classify("calculus")     # => "Calculu"
   def classify(table_name)
     # strip out any leading schema name
     camelize(singularize(table_name.to_s.sub(/.*\./, "")))
@@ -286,37 +284,22 @@ module Inflector
   #  apply_inflections("post", inflections.plurals)    # => "posts"
   #  apply_inflections("posts", inflections.singulars) # => "post"
   private def apply_inflections(word, rules)
-    original = word.to_s.dup
-    result = original
-    if word.empty? || inflections.uncountables.uncountable?(result)
-      result
-    else
-      rules.find do |arr, _|
-        rule, replacement = arr
-        result = original.sub(rule, replacement)
-        if result != original && result.ends_with?("ss") && !original.ends_with?("ss")
-          # puts
-          # puts "rule:        #{rule.class}"
-          # puts "replacement: #{replacement}"
-          # puts "original:    #{original}"
-          # puts "result:      #{result}"
-          # puts
-          # well this works for pluralizing words that are already plural
-          # and it breaks going in reverse
-            # old_news
-            # news
-            # miniseries
-          return original
+    result = word.to_s
+
+    return result if result.empty? || inflections.uncountables.includes?(result.downcase[/\b\w+\Z/])
+
+    rules.each do |rule_and_replacement|
+      rule, replacement = rule_and_replacement
+      if result =~ rule
+        result = result.gsub(rule) do |s, match|
+          replacement = replacement.gsub("\\1", match[1]?)
+          replacement = replacement.gsub("\\2", match[2]?)
+          replacement
         end
-        # if result != original
-        #   puts
-        #   puts result
-        #   puts original
-        #   puts
-        # end
-        result != original
+        break
       end
-      result
     end
+
+    result
   end
 end
