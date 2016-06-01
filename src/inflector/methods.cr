@@ -189,8 +189,10 @@ module Inflector
   # Singular names are not handled correctly:
   #
   #   classify("calculus")     # => "Calculu"
-  def classify(table_name)
-    # strip out any leading schema name
+  def classify(table_name : String)
+    camelize(singularize(table_name.sub(/.*\./, "")))
+  end
+  def classify(table_name : Symbol)
     camelize(singularize(table_name.to_s.sub(/.*\./, "")))
   end
 
@@ -288,18 +290,14 @@ module Inflector
 
     return result if result.empty? || inflections.uncountables.includes?(result.downcase[/\b\w+\Z/])
 
-    rules.each do |rule_and_replacement|
+    rules.find do |rule_and_replacement|
       rule, replacement = rule_and_replacement
       if result =~ rule
         result = result.gsub(rule) do |s, match|
-          replacement = replacement.gsub("\\1", match[1]?)
-          replacement = replacement.gsub("\\2", match[2]?)
-          replacement
+          replacement.gsub("\\1", match[1]?).gsub("\\2", match[2]?)
         end
-        break
       end
     end
-
     result
   end
 end
