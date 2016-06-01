@@ -2,8 +2,6 @@
 
 This is an attempt to bring [ActiveSupport's Inflector](https://github.com/rails/rails/tree/master/activesupport/lib/active_support/inflector) to Crystal. It started as a test idea for another project ([Native Ruby extensions in Crystal](https://github.com/phoffer/crystalized_ruby/)), but then worked well enough that I decided to turn it into its own project.
 
-**This is a work in progress, there are some issues around pluralization of certain words. Additionally, some tests have not been fully ported over yet.**
-
 ## Installation
 
 Add this to your application's `shard.yml`:
@@ -12,7 +10,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   inflector:
     github: phoffer/inflector.cr
-    version: "~> 0.1.1"
+    version: "~> 0.1.2"
 ```
 
 Somewhere in your app initialization, `require "inflector"`.
@@ -56,12 +54,10 @@ Additionally, these are available if you required the core extensions. Additiona
 "employee_salary".humanize                            # => "Employee salary"
 "what a Lovely Day".upcase_first                      # => "What a Lovely Day"
 "Message".foreign_key                                 # => "message_id"
-
 ```
 
 ## TODO
 
-- [ ] Fix pluralization
 - [ ] Enable additional tests (tests have been mostly ported from ActiveSupport::Inflector)
 - [ ] Hook up Travis CI
 
