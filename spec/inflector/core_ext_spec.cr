@@ -1,6 +1,18 @@
 require "../spec_helper"
 require "../../src/core_ext"
 
+describe "core extensions" do
+  describe "blank?" do
+    assert { "#{0xa0.chr}".blank?.should be_true }
+    assert { "\t\n".blank?.should be_true }
+    assert { " ".blank?.should be_true }
+    assert { "a".blank?.should be_false }
+    assert { "a ".blank?.should be_false }
+    assert { "".blank?.should be_true }
+  end
+end
+
+
 1.ordinalize                                # => "1st"
 2.ordinalize                                # => "2nd"
 1002.ordinalize                             # => "1002nd"
