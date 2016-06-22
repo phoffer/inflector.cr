@@ -10,7 +10,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   inflector:
     github: phoffer/inflector.cr
-    version: "~> 0.1.2"
+    version: "~> 0.1.3"
 ```
 
 Somewhere in your app initialization, `require "inflector"`.
@@ -59,7 +59,7 @@ Additionally, these are available if you required the core extensions. Additiona
 ## TODO
 
 - [ ] Enable additional tests (tests have been mostly ported from ActiveSupport::Inflector)
-- [-] Hook up Travis CI
+- [x] Hook up Travis CI
 
 ## Contributing
 
