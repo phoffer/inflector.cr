@@ -6,20 +6,10 @@ include InflectorTestCases
 
 describe "Inflector" do
 
-  # def setup
-  #   # Dups the singleton before each test, restoring the original inflections later.
-  #   #
-  #   # This helper is implemented by setting @__instance__ because in some tests
-  #   # there are module functions that access Inflector.inflections,
-  #   # so we need to replace the singleton itself.
-  #   @original_inflections = Inflector::Inflections.instance_variable_get(:@__instance__)[:en]
-  #   Inflector::Inflections.instance_variable_set(:@__instance__, en: @original_inflections.dup)
-  # end
-
-  # def teardown
-  #   Inflector::Inflections.instance_variable_set(:@__instance__, en: @original_inflections)
-  # end
-
+  # replicates the setup/teardown from Rails' specs
+  Spec.before_each do
+    Inflector.reload
+  end
 
   describe "pluralize_plurals" do
     it "doesn't re-pluralize plural words" do
@@ -469,65 +459,85 @@ describe "Inflector" do
     end
   end
 
-  # Irregularities.each do |singular, plural|
-  #   define_method("test_irregularity_between_#{singular}_and_#{plural}") do
-  #     Inflector.inflections do |inflect|
-  #       inflect.irregular(singular, plural)
-  # (Inflector.singularize(plural)).should eq(singular)
-  # (Inflector.pluralize(singular)).should eq(plural)
-  #     end
-  #   end
-  # end
+  Irregularities.each do |singular, plural|
+    it "test_irregularity_between_ '#{singular}' should == '#{plural}'" do
+      Inflector.inflections do |inflect|
+        inflect.irregular(singular, plural)
+        (Inflector.singularize(plural)).should eq(singular)
+        (Inflector.pluralize(singular)).should eq(plural)
+      end
+    end
+  end
 
-  # Irregularities.each do |singular, plural|
-  #   define_method("test_pluralize_of_irregularity_#{plural}_should_be_the_same") do
-  #     Inflector.inflections do |inflect|
-  #       inflect.irregular(singular, plural)
-  # (Inflector.pluralize(plural)).should eq(plural)
-  #     end
-  #   end
-  # end
+  Irregularities.each do |singular, plural|
+    it "test_pluralize_of_irregularity_#{plural}_should_be_the_same" do
+      Inflector.inflections do |inflect|
+        inflect.irregular(singular, plural)
+        (Inflector.pluralize(plural)).should eq(plural)
+      end
+    end
+  end
 
-  # Irregularities.each do |singular, plural|
-  #   define_method("test_singularize_of_irregularity_#{singular}_should_be_the_same") do
-  #     Inflector.inflections do |inflect|
-  #       inflect.irregular(singular, plural)
-  # (Inflector.singularize(singular)).should eq(singular)
-  #     end
-  #   end
-  # end
+  Irregularities.each do |singular, plural|
+    it "test_singularize_of_irregularity_#{singular}_should_be_the_same" do
+      Inflector.inflections do |inflect|
+        inflect.irregular(singular, plural)
+        (Inflector.singularize(singular)).should eq(singular)
+      end
+    end
+  end
 
-  # [ :all, [] ].each do |scope|
-  #   Inflector.inflections do |inflect|
-  #     define_method("test_clear_inflections_with_#{scope.kind_of?(Array) ? "no_arguments" : scope}") do
-  #       # save all the inflections
-  #       singulars, plurals, uncountables = inflect.singulars, inflect.plurals, inflect.uncountables
+  Inflector.inflections do |inflect|
+    it "test_clear_inflections_with_array" do
+      # save all the inflections
+      singulars, plurals, uncountables = inflect.singulars, inflect.plurals, inflect.uncountables
 
-  #       # clear all the inflections
-  #       inflect.clear(*scope)
+      # clear all the inflections
+      inflect.clear(:all)
 
-  # (inflect.singulars).should eq([])
-  # (inflect.plurals).should eq([])
-  # (inflect.uncountables).should eq([])
+      (inflect.singulars).should    eq([] of {Regex, String})
+      (inflect.plurals).should      eq([] of {Regex, String})
+      (inflect.uncountables).should eq([] of String)
 
-  #       # restore all the inflections
-  #       singulars.reverse_each { |singular| inflect.singular(*singular) }
-  #       plurals.reverse_each   { |plural|   inflect.plural(*plural) }
-  #       inflect.uncountable(uncountables)
+      # restore all the inflections
+      singulars.reverse_each { |singular| inflect.singular(*singular) }
+      plurals.reverse_each   { |plural|   inflect.plural(*plural) }
+      inflect.uncountable(uncountables)
 
-  # (inflect.singulars).should eq(singulars)
-  # (inflect.plurals).should eq(plurals)
-  # (inflect.uncountables).should eq(uncountables)
-  #     end
-  #   end
-  # end
+      (inflect.singulars).should    eq(singulars)
+      (inflect.plurals).should      eq(plurals)
+      (inflect.uncountables).should eq(uncountables)
+    end
+  end
+  Inflector.inflections do |inflect|
+    it "test_clear_inflections_with_all" do
+      # save all the inflections
+      singulars, plurals, uncountables = inflect.singulars, inflect.plurals, inflect.uncountables
+
+      # clear all the inflections
+      inflect.clear
+
+      (inflect.singulars).should    eq([] of {Regex, String})
+      (inflect.plurals).should      eq([] of {Regex, String})
+      (inflect.uncountables).should eq([] of String)
+
+      # restore all the inflections
+      singulars.reverse_each { |singular| inflect.singular(*singular) }
+      plurals.reverse_each   { |plural|   inflect.plural(*plural) }
+      inflect.uncountable(uncountables)
+
+      (inflect.singulars).should    eq(singulars)
+      (inflect.plurals).should      eq(plurals)
+      (inflect.uncountables).should eq(uncountables)
+    end
+  end
 
 
   describe "inflections_with_uncountable_words" do
-    Inflector.inflections do |inflect|
-      inflect.uncountable "HTTP"
-    end
     it "should not count HTTP" do
+      Inflector.inflections do |inflect|
+        inflect.uncountable "HTTP"
+      end
       (Inflector.pluralize("HTTP")).should eq("HTTP")
     end
   end

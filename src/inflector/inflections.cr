@@ -23,7 +23,7 @@ module Inflector
   class Inflections
     @@__instance__ = {} of Symbol => self
 
-    def self.instance(locale = :en)
+    def self.instance(locale : Symbol = :en)
       @@__instance__[locale] ||= new
     end
 
@@ -169,6 +169,9 @@ module Inflector
     def uncountable(*words)
       @uncountables += words.to_a.map(&.downcase)
     end
+    def uncountable(word : String)
+      @uncountables.push(word.downcase)
+    end
 
     def uncountable(words : Array(String))
       @uncountables += words.map(&.downcase)
@@ -201,7 +204,7 @@ module Inflector
     #
     #   clear :all
     #   clear :plurals
-    def clear(scope = :all)
+    def clear(scope : Symbol = :all)
       case scope
       when :all
         @plurals      = @plurals.clear
@@ -221,6 +224,13 @@ module Inflector
       end
     end
   end
+  def clear(locale : Symbol = :en)
+    self.inflections(locale).clear
+  end
+  def reload(locale : Symbol = :en)
+    self.clear(locale)
+    self.seed
+  end
 
   # Yields a singleton instance of Inflector::Inflections so you can specify
   # additional inflector rules. If passed an optional locale, rules for other
@@ -230,10 +240,10 @@ module Inflector
   #   ActiveSupport::Inflector.inflections(:en) do |inflect|
   #     inflect.uncountable "rails"
   #   end
-  def inflections(locale = :en, &block)
+  def inflections(locale : Symbol = :en, &block)
     yield Inflections.instance(locale)
   end
-  def inflections(locale = :en)
+  def inflections(locale : Symbol = :en)
     Inflections.instance(locale)
   end
 end
