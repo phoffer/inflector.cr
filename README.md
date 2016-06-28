@@ -10,7 +10,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   inflector:
     github: phoffer/inflector.cr
-    version: "~> 0.1.3"
+    version: "~> 0.1.4"
 ```
 
 Somewhere in your app initialization, `require "inflector"`.
