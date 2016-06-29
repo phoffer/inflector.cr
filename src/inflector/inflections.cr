@@ -114,6 +114,9 @@ module Inflector
       @uncountables.delete(rule)
       plural(Regex.new(rule), replacement)
     end
+    def plural(rule, replacement)
+      1
+    end
 
     # Specifies a new singularization rule and its replacement. The rule can
     # either be a string or a regular expression. The replacement should
@@ -126,6 +129,9 @@ module Inflector
     def singular(rule : String, replacement)
       @uncountables.delete(rule)
       singular(Regex.new(rule), replacement)
+    end
+    def singular(rule, replacement)
+      1
     end
 
     # Specifies a new irregular that applies to both pluralization and
@@ -198,6 +204,9 @@ module Inflector
     def human(rule : String, replacement)
       rule = Regex.new(rule)
       human(rule, replacement)
+    end
+    def human(rule, replacement)
+      1
     end
 
     # Clears the loaded inflections within a given scope (default is
