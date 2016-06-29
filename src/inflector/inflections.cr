@@ -21,9 +21,12 @@ module Inflector
   # singularization rules that is runs. This guarantees that your rules run
   # before any of the rules that may already have been loaded.
   class Inflections
-    @@__instance__ = {} of Symbol => self
+    @@__instance__ = {} of String => self
 
     def self.instance(locale : Symbol = :en)
+      instance(locale.to_s)
+    end
+    def self.instance(locale : String = "en")
       @@__instance__[locale] ||= new
     end
 
@@ -204,6 +207,12 @@ module Inflector
     #
     #   clear :all
     #   clear :plurals
+    def clear
+      @plurals      = @plurals.clear
+      @singulars    = @singulars.clear
+      @uncountables = @uncountables.clear
+      @humans       = @humans.clear
+    end
     def clear(scope : Symbol = :all)
       case scope
       when :all
