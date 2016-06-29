@@ -228,21 +228,24 @@ module Inflector
       @humans       = @humans.clear
     end
     def clear(scope : Symbol = :all)
+      clear(scope.to_s)
+    end
+    def clear(scope : String = "all")
       case scope
-      when :all
+      when "all"
         @plurals      = @plurals.clear
         @singulars    = @singulars.clear
         @uncountables = @uncountables.clear
         @humans       = @humans.clear
-      when :plurals
+      when "plurals"
         @plurals      = @plurals.clear
-      when :singulars
+      when "singulars"
         @singulars    = @singulars.clear
-      when :uncountables
+      when "uncountables"
         @uncountables = @uncountables.clear
-      when :humans
+      when "humans"
         @humans       = @humans.clear
-      when :acronyms
+      when "acronyms"
         @acronyms     = @acronyms.clear
       end
     end
