@@ -29,6 +29,11 @@ module Inflector
     def self.instance(locale : String = "en")
       @@__instance__[locale] ||= new
     end
+    def self.clear
+      @@__instance__.each do |loc, inflection|
+        inflection.clear
+      end
+    end
 
     getter :plurals, :singulars, :uncountables, :humans, :acronyms, :acronym_regex
 
@@ -242,11 +247,8 @@ module Inflector
       end
     end
   end
-  def clear(locale : Symbol = :en)
-    self.inflections(locale).clear
-  end
-  def reload(locale : Symbol = :en)
-    self.clear(locale)
+  def reload
+    Inflections.clear
     self.seed
   end
 
@@ -262,6 +264,12 @@ module Inflector
     yield Inflections.instance(locale)
   end
   def inflections(locale : Symbol = :en)
+    Inflections.instance(locale)
+  end
+  def inflections(locale : String = "en", &block)
+    yield Inflections.instance(locale)
+  end
+  def inflections(locale : String = "en")
     Inflections.instance(locale)
   end
 end
