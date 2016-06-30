@@ -43,7 +43,7 @@ describe "Inflector" do
       uncountable_word = "ors"
       countable_word = "sponsor"
 
-      Inflector.inflections.uncountables << uncountable_word
+      Inflector.inflections.uncountable(uncountable_word)
 
       (Inflector.singularize(uncountable_word)).should  eq(uncountable_word)
       (Inflector.pluralize(uncountable_word)).should    eq(uncountable_word)
