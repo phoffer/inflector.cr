@@ -15,7 +15,7 @@ dependencies:
 
 Somewhere in your app initialization, `require "inflector"`.
 
-Inflector.cr passes specs with Crystal versions `0.17.4`, `0.18.7`, and `0.19.2` (current).
+Inflector.cr passes specs with Crystal versions `0.17.4`, `0.18.7`, `0.19.2`, and `0.20.0` (current).
 
 Additionally, there are core extensions to `String` and `Int`. If you want these, then `require "inflector/core_ext` instead of the standard `require`.
 
