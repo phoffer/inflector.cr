@@ -3,12 +3,12 @@ require "../../src/core_ext"
 
 describe "core extensions" do
   describe "blank?" do
-    assert { "#{0xa0.chr}".blank?.should be_true }
-    assert { "\t\n".blank?.should be_true }
-    assert { " ".blank?.should be_true }
-    assert { "a".blank?.should be_false }
-    assert { "a ".blank?.should be_false }
-    assert { "".blank?.should be_true }
+    it { "#{0xa0.chr}".blank?.should be_true }
+    it { "\t\n".blank?.should be_true }
+    it { " ".blank?.should be_true }
+    it { "a".blank?.should be_false }
+    it { "a ".blank?.should be_false }
+    it { "".blank?.should be_true }
   end
 end
 
