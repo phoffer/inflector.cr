@@ -3,12 +3,12 @@ require "../../src/core_ext"
 
 describe "core extensions" do
   describe "blank?" do
-    it { "#{0xa0.chr}".blank?.should be_true }
-    it { "\t\n".blank?.should be_true }
-    it { " ".blank?.should be_true }
-    it { "a".blank?.should be_false }
-    it { "a ".blank?.should be_false }
-    it { "".blank?.should be_true }
+    it "handles no break space" { "#{0xa0.chr}".blank?.should be_true }
+    it "handles tabs and new lines" { "\t\n".blank?.should be_true }
+    it "handles whitespace" { " ".blank?.should be_true }
+    it "keeps characters" { "a".blank?.should be_false }
+    it "keep characters with whitespace" { "a ".blank?.should be_false }
+    it "checks empty string" { "".blank?.should be_true }
   end
 end
 
