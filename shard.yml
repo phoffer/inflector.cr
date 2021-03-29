@@ -1,6 +1,8 @@
 name: inflector
 version: 0.1.8
 
+crystal: 1.0.0
+
 authors:
   - Paul Hoffer <paulrhoffer@gmail.com>
 
