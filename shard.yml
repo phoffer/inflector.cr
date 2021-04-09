@@ -4,7 +4,7 @@ version: 0.1.8
 crystal: 1.0.0
 
 authors:
-  - Paul Hoffer <paulrhoffer@gmail.com>
+  - Paul Hoffer <git@paulhoffer.com>
 
 description: |
   String inflectors for Crystal, ported from ActiveSupport (Rails) Inflector functionality.
