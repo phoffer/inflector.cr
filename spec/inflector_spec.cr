@@ -38,7 +38,7 @@ describe "Inflector" do
 
   describe "uncountable" do
     it "uncountable_word_is_not_greedy" do
-      
+
 
       uncountable_word = "ors"
       countable_word = "sponsor"
@@ -53,7 +53,7 @@ describe "Inflector" do
     end
   end
 
-  describe "singular to plural" do    
+  describe "singular to plural" do
     SingularToPlural.each do |singular, plural|
       it "pluralize '#{singular}' should == '#{plural}'" do
         (Inflector.pluralize(singular)).should            eq(plural)
@@ -346,7 +346,7 @@ describe "Inflector" do
   end
 
   describe "#dasherize" do
-    it "dasherizes correctly" do
+    context "dasherizes correctly" do
       UnderscoresToDashes.each do |underscored, dasherized|
         it "dasherizes #{underscored} => #{dasherized}" do
           (Inflector.dasherize(underscored)).should eq(dasherized)
@@ -354,7 +354,7 @@ describe "Inflector" do
       end
     end
 
-    it "underscore_as_reverse_of_dasherize" do
+    context "underscore_as_reverse_of_dasherize" do
       UnderscoresToDashes.each_key do |underscored|
         it "dasherizes and underscores back to original #{underscored}" do
           (Inflector.underscore(Inflector.dasherize(underscored))).should eq(underscored)
