@@ -1,7 +1,6 @@
 module Inflector
   extend self
 
-
   # A singleton instance of this class is yielded by Inflector.inflections,
   # which can then be used to specify additional inflection rules. If passed
   # an optional locale, rules for other languages can be specified. The
@@ -26,9 +25,11 @@ module Inflector
     def self.instance(locale : Symbol = :en)
       instance(locale.to_s)
     end
+
     def self.instance(locale : String = "en")
       @@__instance__[locale] ||= new
     end
+
     def self.clear
       @@__instance__.each do |loc, inflection|
         inflection.clear
@@ -38,11 +39,11 @@ module Inflector
     getter :plurals, :singulars, :uncountables, :humans, :acronyms, :acronym_regex
 
     def initialize
-      @plurals       = [] of {Regex, String}
-      @singulars     = [] of {Regex, String}
-      @uncountables  = [] of String
-      @humans        = [] of {Regex, String}
-      @acronyms      = {} of String => String
+      @plurals = [] of {Regex, String}
+      @singulars = [] of {Regex, String}
+      @uncountables = [] of String
+      @humans = [] of {Regex, String}
+      @acronyms = {} of String => String
       @acronym_regex = /(?=a)b/
     end
 
@@ -115,10 +116,12 @@ module Inflector
       @uncountables.delete(replacement)
       @plurals.unshift({rule, replacement})
     end
+
     def plural(rule : String, replacement)
       @uncountables.delete(rule)
       plural(Regex.new(rule), replacement)
     end
+
     def plural(rule, replacement)
       1
     end
@@ -131,10 +134,12 @@ module Inflector
       @uncountables.delete(replacement)
       @singulars.unshift({rule, replacement})
     end
+
     def singular(rule : String, replacement)
       @uncountables.delete(rule)
       singular(Regex.new(rule), replacement)
     end
+
     def singular(rule, replacement)
       1
     end
@@ -163,14 +168,14 @@ module Inflector
         singular(/(#{s0})#{srest}$/i, "\\1" + srest)
         singular(/(#{p0})#{prest}$/i, "\\1" + srest)
       else
-        plural(/#{s0.upcase}(?i)#{srest}$/,   p0.upcase   + prest)
+        plural(/#{s0.upcase}(?i)#{srest}$/, p0.upcase + prest)
         plural(/#{s0.downcase}(?i)#{srest}$/, p0.downcase + prest)
-        plural(/#{p0.upcase}(?i)#{prest}$/,   p0.upcase   + prest)
+        plural(/#{p0.upcase}(?i)#{prest}$/, p0.upcase + prest)
         plural(/#{p0.downcase}(?i)#{prest}$/, p0.downcase + prest)
 
-        singular(/#{s0.upcase}(?i)#{srest}$/,   s0.upcase   + srest)
+        singular(/#{s0.upcase}(?i)#{srest}$/, s0.upcase + srest)
         singular(/#{s0.downcase}(?i)#{srest}$/, s0.downcase + srest)
-        singular(/#{p0.upcase}(?i)#{prest}$/,   s0.upcase   + srest)
+        singular(/#{p0.upcase}(?i)#{prest}$/, s0.upcase + srest)
         singular(/#{p0.downcase}(?i)#{prest}$/, s0.downcase + srest)
       end
     end
@@ -183,6 +188,7 @@ module Inflector
     def uncountable(*words)
       @uncountables += words.to_a.map(&.downcase)
     end
+
     def uncountable(word : String)
       @uncountables.push(word.downcase)
     end
@@ -206,10 +212,12 @@ module Inflector
     def human(rule : Regex, replacement)
       @humans.unshift({rule, replacement})
     end
+
     def human(rule : String, replacement)
       rule = Regex.new(rule)
       human(rule, replacement)
     end
+
     def human(rule, replacement)
       1
     end
@@ -222,34 +230,37 @@ module Inflector
     #   clear :all
     #   clear :plurals
     def clear
-      @plurals      = @plurals.clear
-      @singulars    = @singulars.clear
+      @plurals = @plurals.clear
+      @singulars = @singulars.clear
       @uncountables = @uncountables.clear
-      @humans       = @humans.clear
+      @humans = @humans.clear
     end
+
     def clear(scope : Symbol = :all)
       clear(scope.to_s)
     end
+
     def clear(scope : String = "all")
       case scope
       when "all"
-        @plurals      = @plurals.clear
-        @singulars    = @singulars.clear
+        @plurals = @plurals.clear
+        @singulars = @singulars.clear
         @uncountables = @uncountables.clear
-        @humans       = @humans.clear
+        @humans = @humans.clear
       when "plurals"
-        @plurals      = @plurals.clear
+        @plurals = @plurals.clear
       when "singulars"
-        @singulars    = @singulars.clear
+        @singulars = @singulars.clear
       when "uncountables"
         @uncountables = @uncountables.clear
       when "humans"
-        @humans       = @humans.clear
+        @humans = @humans.clear
       when "acronyms"
-        @acronyms     = @acronyms.clear
+        @acronyms = @acronyms.clear
       end
     end
   end
+
   def reload
     Inflections.clear
     self.seed
@@ -266,12 +277,15 @@ module Inflector
   def inflections(locale : Symbol = :en, &block)
     yield Inflections.instance(locale)
   end
+
   def inflections(locale : Symbol = :en)
     Inflections.instance(locale)
   end
+
   def inflections(locale : String = "en", &block)
     yield Inflections.instance(locale)
   end
+
   def inflections(locale : String = "en")
     Inflections.instance(locale)
   end

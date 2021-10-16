@@ -151,6 +151,7 @@ module Inflector
   def upcase_first(string : String)
     string.size > 0 ? string[1..-1].insert(0, string[0].upcase) : ""
   end
+
   def upcase_first(char : Char)
     char.upcase
   end
@@ -192,6 +193,7 @@ module Inflector
   def classify(table_name : String)
     camelize(singularize(table_name.sub(/.*\./, "")))
   end
+
   def classify(table_name : Symbol)
     camelize(singularize(table_name.to_s.sub(/.*\./, "")))
   end
@@ -214,7 +216,7 @@ module Inflector
   def demodulize(path)
     path = path.to_s
     if i = path.rindex("::")
-      path[(i+2)..-1]
+      path[(i + 2)..-1]
     else
       path
     end
@@ -260,10 +262,10 @@ module Inflector
       "th"
     else
       case abs_number % 10
-        when 1; "st"
-        when 2; "nd"
-        when 3; "rd"
-        else    "th"
+      when 1; "st"
+      when 2; "nd"
+      when 3; "rd"
+      else    "th"
       end
     end
   end
