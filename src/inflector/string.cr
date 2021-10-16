@@ -1,20 +1,19 @@
 require "./methods"
 
-
 struct Char
   def blank?
     case ord
     when 9, 0xa, 0xb, 0xc, 0xd, 0x20, 0x85, 0xa0, 0x1680, 0x180e,
-          0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006,
-          0x2007, 0x2008, 0x2009, 0x200a, 0x2028, 0x2029, 0x202f,
-          0x205f, 0x3000 then true
+         0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006,
+         0x2007, 0x2008, 0x2009, 0x200a, 0x2028, 0x2029, 0x202f,
+         0x205f, 0x3000 then true
     else
       false
     end
   end
 end
-class String
 
+class String
   # A string is blank if it's empty or contains whitespaces only:
   #
   #   ''.blank?       # => true
@@ -36,6 +35,7 @@ class String
   #   str.squish!                         # => "foo bar boo"
   #   str                                 # => "foo bar boo"
   SQUISH_REGEX = /[[:space:]]+/
+
   def squish
     self.gsub(SQUISH_REGEX, ' ').strip
   end
@@ -95,9 +95,9 @@ class String
   #   'Module'.constantize  # => Module
   #   'Class'.constantize   # => Class
   #   'blargle'.constantize # => NameError: wrong constant name blargle
-############
-# not dealing with ruby classes
-############
+  ############
+  # not dealing with ruby classes
+  ############
   # def constantize
   #   Inflector.constantize(self)
   # end
@@ -109,9 +109,9 @@ class String
   #   'Module'.safe_constantize  # => Module
   #   'Class'.safe_constantize   # => Class
   #   'blargle'.safe_constantize # => nil
-############
-# not dealing with ruby classes
-############
+  ############
+  # not dealing with ruby classes
+  ############
   # def safe_constantize
   #   Inflector.safe_constantize(self)
   # end
@@ -133,6 +133,7 @@ class String
       Inflector.camelize(self, false)
     end
   end
+
   # Don't want to redefine native method
   # def camelcase(first_letter = :upper)
   #   camelize(first_letter)
@@ -149,6 +150,7 @@ class String
   def titleize
     Inflector.titleize(self)
   end
+
   def titlecase
     titleize
   end
@@ -208,7 +210,7 @@ class String
   #
   #   <%= link_to(@person.name, person_path) %>
   #   # => <a href="/person/1-donald-e-knuth">Donald E. Knuth</a>
-  #   
+  #
   # To preserve the case of the characters in a string, use the `preserve_case` argument.
   #
   #   class Person
@@ -222,9 +224,9 @@ class String
   #
   #   <%= link_to(@person.name, person_path) %>
   #   # => <a href="/person/1-Donald-E-Knuth">Donald E. Knuth</a>
-############
-# requires transliterate and I'm not dealing with that for now
-############  
+  ############
+  # requires transliterate and I'm not dealing with that for now
+  ############
   # def parameterize(sep = :unused, separator: '-', preserve_case: false)
   #   Inflector.parameterize(self, separator: separator, preserve_case: preserve_case)
   # end

@@ -5,7 +5,6 @@ require "./inflector_test_cases"
 include InflectorTestCases
 
 describe "Inflector" do
-
   # replicates the setup/teardown from Rails' specs
   Spec.before_each do
     Inflector.reload
@@ -38,32 +37,30 @@ describe "Inflector" do
 
   describe "uncountable" do
     it "uncountable_word_is_not_greedy" do
-      
-
       uncountable_word = "ors"
       countable_word = "sponsor"
 
       Inflector.inflections.uncountable(uncountable_word)
 
-      (Inflector.singularize(uncountable_word)).should  eq(uncountable_word)
-      (Inflector.pluralize(uncountable_word)).should    eq(uncountable_word)
+      (Inflector.singularize(uncountable_word)).should eq(uncountable_word)
+      (Inflector.pluralize(uncountable_word)).should eq(uncountable_word)
 
-      (Inflector.singularize(countable_word)).should    eq("sponsor")
-      (Inflector.pluralize(countable_word)).should      eq("sponsors")
+      (Inflector.singularize(countable_word)).should eq("sponsor")
+      (Inflector.pluralize(countable_word)).should eq("sponsors")
     end
   end
 
-  describe "singular to plural" do    
+  describe "singular to plural" do
     SingularToPlural.each do |singular, plural|
       it "pluralize '#{singular}' should == '#{plural}'" do
-        (Inflector.pluralize(singular)).should            eq(plural)
+        (Inflector.pluralize(singular)).should eq(plural)
         (Inflector.pluralize(singular.capitalize)).should eq(plural.capitalize)
       end
     end
 
     SingularToPlural.each do |singular, plural|
       it "singularize '#{plural}' should == '#{singular}'" do
-        (Inflector.singularize(plural)).should            eq(singular)
+        (Inflector.singularize(plural)).should eq(singular)
         (Inflector.singularize(plural.capitalize)).should eq(singular.capitalize)
       end
     end
@@ -71,16 +68,15 @@ describe "Inflector" do
 
   SingularToPlural.each do |singular, plural|
     it "pluralizing #{plural} should not change" do
-      (Inflector.pluralize(plural)).should                eq(plural)
-      (Inflector.pluralize(plural.capitalize)).should     eq(plural.capitalize)
+      (Inflector.pluralize(plural)).should eq(plural)
+      (Inflector.pluralize(plural.capitalize)).should eq(plural.capitalize)
     end
 
     it "singularizing #{singular} should not change" do
-      (Inflector.singularize(singular)).should            eq(singular)
+      (Inflector.singularize(singular)).should eq(singular)
       (Inflector.singularize(singular.capitalize)).should eq(singular.capitalize)
     end
   end
-
 
   describe "overwrite_previous_inflectors" do
     it "should overwrite inflectors" do
@@ -109,7 +105,7 @@ describe "Inflector" do
   end
 
   describe "camelize_with_underscores" do
-    (Inflector.camelize("Camel_Case")).should     eq("CamelCase")
+    (Inflector.camelize("Camel_Case")).should eq("CamelCase")
   end
 
   describe "acronyms" do
@@ -127,39 +123,39 @@ describe "Inflector" do
 
       #  camelize             underscore            humanize              titleize
       [
-        ["API",               "api",                "API",                "API"],
-        ["APIController",     "api_controller",     "API controller",     "API Controller"],
-        ["Nokogiri::HTML",    "nokogiri/html",      "Nokogiri/HTML",      "Nokogiri/HTML"],
-        ["HTTPAPI",           "http_api",           "HTTP API",           "HTTP API"],
-        ["HTTP::Get",         "http/get",           "HTTP/get",           "HTTP/Get"],
-        ["SSLError",          "ssl_error",          "SSL error",          "SSL Error"],
-        ["RESTful",           "restful",            "RESTful",            "RESTful"],
+        ["API", "api", "API", "API"],
+        ["APIController", "api_controller", "API controller", "API Controller"],
+        ["Nokogiri::HTML", "nokogiri/html", "Nokogiri/HTML", "Nokogiri/HTML"],
+        ["HTTPAPI", "http_api", "HTTP API", "HTTP API"],
+        ["HTTP::Get", "http/get", "HTTP/get", "HTTP/Get"],
+        ["SSLError", "ssl_error", "SSL error", "SSL Error"],
+        ["RESTful", "restful", "RESTful", "RESTful"],
         ["RESTfulController", "restful_controller", "RESTful controller", "RESTful Controller"],
-        ["Nested::RESTful",   "nested/restful",     "Nested/RESTful",     "Nested/RESTful"],
-        ["IHeartW3C",         "i_heart_w3c",        "I heart W3C",        "I Heart W3C"],
-        ["PhDRequired",       "phd_required",       "PhD required",       "PhD Required"],
-        ["IRoRU",             "i_ror_u",            "I RoR u",            "I RoR U"],
-        ["RESTfulHTTPAPI",    "restful_http_api",   "RESTful HTTP API",   "RESTful HTTP API"],
-        ["HTTP::RESTful",     "http/restful",       "HTTP/RESTful",       "HTTP/RESTful"],
-        ["HTTP::RESTfulAPI",  "http/restful_api",   "HTTP/RESTful API",   "HTTP/RESTful API"],
-        ["APIRESTful",        "api_restful",        "API RESTful",        "API RESTful"],
+        ["Nested::RESTful", "nested/restful", "Nested/RESTful", "Nested/RESTful"],
+        ["IHeartW3C", "i_heart_w3c", "I heart W3C", "I Heart W3C"],
+        ["PhDRequired", "phd_required", "PhD required", "PhD Required"],
+        ["IRoRU", "i_ror_u", "I RoR u", "I RoR U"],
+        ["RESTfulHTTPAPI", "restful_http_api", "RESTful HTTP API", "RESTful HTTP API"],
+        ["HTTP::RESTful", "http/restful", "HTTP/RESTful", "HTTP/RESTful"],
+        ["HTTP::RESTfulAPI", "http/restful_api", "HTTP/RESTful API", "HTTP/RESTful API"],
+        ["APIRESTful", "api_restful", "API RESTful", "API RESTful"],
 
         # misdirection
-        ["Capistrano",        "capistrano",         "Capistrano",       "Capistrano"],
-        ["CapiController",    "capi_controller",    "Capi controller",  "Capi Controller"],
-        ["HttpsApis",         "https_apis",         "Https apis",       "Https Apis"],
-        ["Html5",             "html5",              "Html5",            "Html5"],
-        ["Restfully",         "restfully",          "Restfully",        "Restfully"],
-        ["RoRails",           "ro_rails",           "Ro rails",         "Ro Rails"]
+        ["Capistrano", "capistrano", "Capistrano", "Capistrano"],
+        ["CapiController", "capi_controller", "Capi controller", "Capi Controller"],
+        ["HttpsApis", "https_apis", "Https apis", "Https Apis"],
+        ["Html5", "html5", "Html5", "Html5"],
+        ["Restfully", "restfully", "Restfully", "Restfully"],
+        ["RoRails", "ro_rails", "Ro rails", "Ro Rails"],
       ].each do |arr|
         camel, under, human, title = arr
-        (Inflector.camelize(under)).should    eq(camel)
-        (Inflector.camelize(camel)).should    eq(camel)
-        (Inflector.underscore(under)).should  eq(under)
-        (Inflector.underscore(camel)).should  eq(under)
-        (Inflector.titleize(under)).should    eq(title)
-        (Inflector.titleize(camel)).should    eq(title)
-        (Inflector.humanize(under)).should    eq(human)
+        (Inflector.camelize(under)).should eq(camel)
+        (Inflector.camelize(camel)).should eq(camel)
+        (Inflector.underscore(under)).should eq(under)
+        (Inflector.underscore(camel)).should eq(under)
+        (Inflector.titleize(under)).should eq(title)
+        (Inflector.titleize(camel)).should eq(title)
+        (Inflector.humanize(under)).should eq(human)
       end
     end
   end
@@ -171,10 +167,10 @@ describe "Inflector" do
         inflect.acronym("LegacyApi")
       end
 
-      (Inflector.camelize("legacyapi")).should      eq("LegacyApi")
-      (Inflector.camelize("legacy_api")).should     eq("LegacyAPI")
+      (Inflector.camelize("legacyapi")).should eq("LegacyApi")
+      (Inflector.camelize("legacy_api")).should eq("LegacyAPI")
       (Inflector.camelize("some_legacyapi")).should eq("SomeLegacyApi")
-      (Inflector.camelize("nonlegacyapi")).should   eq("Nonlegacyapi")
+      (Inflector.camelize("nonlegacyapi")).should eq("Nonlegacyapi")
     end
     it "acronyms_camelize_lower" do
       Inflector.inflections do |inflect|
@@ -183,8 +179,8 @@ describe "Inflector" do
       end
 
       (Inflector.camelize("html_api", false)).should eq("htmlAPI")
-      (Inflector.camelize("htmlAPI", false)).should  eq("htmlAPI")
-      (Inflector.camelize("HTMLAPI", false)).should  eq("htmlAPI")
+      (Inflector.camelize("htmlAPI", false)).should eq("htmlAPI")
+      (Inflector.camelize("HTMLAPI", false)).should eq("htmlAPI")
     end
     it "underscore_acronym_sequence" do
       Inflector.inflections do |inflect|
@@ -196,8 +192,6 @@ describe "Inflector" do
       (Inflector.underscore("JSONHTMLAPI")).should eq("json_html_api")
     end
   end
-
-
 
   describe "underscore" do
     it "should work" do
@@ -231,38 +225,38 @@ describe "Inflector" do
       (Inflector.demodulize("MyApplication::Billing::Account")).should eq("Account")
     end
     it "Account" do
-      (Inflector.demodulize("Account")).should                         eq("Account")
+      (Inflector.demodulize("Account")).should eq("Account")
     end
     it "::Account" do
-      (Inflector.demodulize("::Account")).should                       eq("Account")
+      (Inflector.demodulize("::Account")).should eq("Account")
     end
     it "" do
-      (Inflector.demodulize("")).should                                eq("")
+      (Inflector.demodulize("")).should eq("")
     end
   end
 
   describe "deconstantize" do
     it "works with 3 levels" do
-      (Inflector.deconstantize("MyApplication::Billing::Account")).should   eq("MyApplication::Billing")
+      (Inflector.deconstantize("MyApplication::Billing::Account")).should eq("MyApplication::Billing")
       (Inflector.deconstantize("::MyApplication::Billing::Account")).should eq("::MyApplication::Billing")
     end
 
     it "works with 2 levels" do
-      (Inflector.deconstantize("MyApplication::Billing")).should            eq("MyApplication")
-      (Inflector.deconstantize("::MyApplication::Billing")).should          eq("::MyApplication")
+      (Inflector.deconstantize("MyApplication::Billing")).should eq("MyApplication")
+      (Inflector.deconstantize("::MyApplication::Billing")).should eq("::MyApplication")
     end
 
     it "works with one level" do
-      (Inflector.deconstantize("Account")).should                           eq("")
-      (Inflector.deconstantize("::Account")).should                         eq("")
-      (Inflector.deconstantize("")).should                                  eq("")
+      (Inflector.deconstantize("Account")).should eq("")
+      (Inflector.deconstantize("::Account")).should eq("")
+      (Inflector.deconstantize("")).should eq("")
     end
   end
 
   describe "foreign_key" do
     ClassNameToForeignKeyWithUnderscore.each do |klass, foreign_key|
       it "converts classname #{klass} => #{foreign_key} with underscore" do
-        (Inflector.foreign_key(klass)).should        eq(foreign_key)
+        (Inflector.foreign_key(klass)).should eq(foreign_key)
       end
     end
 
@@ -284,7 +278,7 @@ describe "Inflector" do
   describe "classify" do
     it "handles base case" do
       ClassNameToTableName.each do |class_name, table_name|
-        (Inflector.classify(table_name)).should                   eq(class_name)
+        (Inflector.classify(table_name)).should eq(class_name)
         (Inflector.classify("table_prefix." + table_name)).should eq(class_name)
       end
     end
@@ -346,7 +340,7 @@ describe "Inflector" do
   end
 
   describe "#dasherize" do
-    it "dasherizes correctly" do
+    context "dasherizes correctly" do
       UnderscoresToDashes.each do |underscored, dasherized|
         it "dasherizes #{underscored} => #{dasherized}" do
           (Inflector.dasherize(underscored)).should eq(dasherized)
@@ -354,7 +348,7 @@ describe "Inflector" do
       end
     end
 
-    it "underscore_as_reverse_of_dasherize" do
+    context "underscore_as_reverse_of_dasherize" do
       UnderscoresToDashes.each_key do |underscored|
         it "dasherizes and underscores back to original #{underscored}" do
           (Inflector.underscore(Inflector.dasherize(underscored))).should eq(underscored)
@@ -390,9 +384,9 @@ describe "Inflector" do
 
       ("hijos").should eq("hijo".pluralize(:es))
       ("luces").should eq("luz".pluralize(:es))
-      ("luzs").should  eq("luz".pluralize)
+      ("luzs").should eq("luz".pluralize)
 
-      ("sociedad").should  eq("sociedades".singularize(:es))
+      ("sociedad").should eq("sociedades".singularize(:es))
       ("sociedade").should eq("sociedades".singularize)
 
       ("los").should eq("el".pluralize(:es))
@@ -400,10 +394,10 @@ describe "Inflector" do
 
       Inflector.inflections(:es) { |inflect| inflect.clear }
 
-      (Inflector.inflections(:es).plurals.size).should   eq(0)
+      (Inflector.inflections(:es).plurals.size).should eq(0)
       (Inflector.inflections(:es).singulars.size).should eq(0)
-      (Inflector.inflections.plurals.size).should_not    eq(0)
-      (Inflector.inflections.singulars.size).should_not  eq(0)
+      (Inflector.inflections.plurals.size).should_not eq(0)
+      (Inflector.inflections.singulars.size).should_not eq(0)
     end
   end
 
@@ -417,10 +411,10 @@ describe "Inflector" do
         inflect.human("col_rpted_bugs", "Reported bugs")
 
         inflect.clear
-        (inflect.plurals.size).should      eq(0)
-        (inflect.singulars.size).should    eq(0)
+        (inflect.plurals.size).should eq(0)
+        (inflect.singulars.size).should eq(0)
         (inflect.uncountables.size).should eq(0)
-        (inflect.humans.size).should       eq(0)
+        (inflect.humans.size).should eq(0)
       end
     end
     it "clears all explicitly" do
@@ -431,10 +425,10 @@ describe "Inflector" do
         inflect.human("col_rpted_bugs", "Reported bugs")
 
         inflect.clear :all
-        (inflect.plurals.size).should      eq(0)
-        (inflect.singulars.size).should    eq(0)
+        (inflect.plurals.size).should eq(0)
+        (inflect.singulars.size).should eq(0)
         (inflect.uncountables.size).should eq(0)
-        (inflect.humans.size).should       eq(0)
+        (inflect.humans.size).should eq(0)
       end
     end
     it "clears individual manually" do
@@ -450,11 +444,11 @@ describe "Inflector" do
         inflect.clear(:humans)
         inflect.clear(:acronyms)
 
-        (inflect.plurals.size).should      eq(0)
-        (inflect.singulars.size).should    eq(0)
+        (inflect.plurals.size).should eq(0)
+        (inflect.singulars.size).should eq(0)
         (inflect.uncountables.size).should eq(0)
-        (inflect.humans.size).should       eq(0)
-        (inflect.acronyms.size).should     eq(0)
+        (inflect.humans.size).should eq(0)
+        (inflect.acronyms.size).should eq(0)
       end
     end
   end
@@ -495,17 +489,17 @@ describe "Inflector" do
       # clear all the inflections
       inflect.clear(:all)
 
-      (inflect.singulars).should    eq([] of {Regex, String})
-      (inflect.plurals).should      eq([] of {Regex, String})
+      (inflect.singulars).should eq([] of {Regex, String})
+      (inflect.plurals).should eq([] of {Regex, String})
       (inflect.uncountables).should eq([] of String)
 
       # restore all the inflections
       singulars.reverse_each { |singular| inflect.singular(*singular) }
-      plurals.reverse_each   { |plural|   inflect.plural(*plural) }
+      plurals.reverse_each { |plural| inflect.plural(*plural) }
       inflect.uncountable(uncountables)
 
-      (inflect.singulars).should    eq(singulars)
-      (inflect.plurals).should      eq(plurals)
+      (inflect.singulars).should eq(singulars)
+      (inflect.plurals).should eq(plurals)
       (inflect.uncountables).should eq(uncountables)
     end
   end
@@ -517,21 +511,20 @@ describe "Inflector" do
       # clear all the inflections
       inflect.clear
 
-      (inflect.singulars).should    eq([] of {Regex, String})
-      (inflect.plurals).should      eq([] of {Regex, String})
+      (inflect.singulars).should eq([] of {Regex, String})
+      (inflect.plurals).should eq([] of {Regex, String})
       (inflect.uncountables).should eq([] of String)
 
       # restore all the inflections
       singulars.reverse_each { |singular| inflect.singular(*singular) }
-      plurals.reverse_each   { |plural|   inflect.plural(*plural) }
+      plurals.reverse_each { |plural| inflect.plural(*plural) }
       inflect.uncountable(uncountables)
 
-      (inflect.singulars).should    eq(singulars)
-      (inflect.plurals).should      eq(plurals)
+      (inflect.singulars).should eq(singulars)
+      (inflect.plurals).should eq(plurals)
       (inflect.uncountables).should eq(uncountables)
     end
   end
-
 
   describe "inflections_with_uncountable_words" do
     it "should not count HTTP" do
