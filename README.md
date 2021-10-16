@@ -1,4 +1,6 @@
-# Inflector (port of ActiveSupport::Inflector) [![Build Status](https://travis-ci.org/phoffer/inflector.cr.svg?branch=master)](https://travis-ci.org/phoffer/inflector.cr)
+# Inflector
+
+[![Crystal CI](https://github.com/phoffer/inflector.cr/actions/workflows/crystal.yml/badge.svg)](https://github.com/phoffer/inflector.cr/actions/workflows/crystal.yml)
 
 This is an attempt to bring [ActiveSupport's Inflector](https://github.com/rails/rails/tree/master/activesupport/lib/active_support/inflector) to Crystal. It started as a test idea for another project ([Native Ruby extensions in Crystal](https://github.com/phoffer/crystalized_ruby/)), but then worked well enough that I decided to turn it into its own project.
 
