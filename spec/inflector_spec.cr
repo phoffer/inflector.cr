@@ -346,7 +346,7 @@ describe "Inflector" do
   end
 
   describe "#dasherize" do
-    it "dasherizes correctly" do
+    describe "dasherizes correctly" do
       UnderscoresToDashes.each do |underscored, dasherized|
         it "dasherizes #{underscored} => #{dasherized}" do
           (Inflector.dasherize(underscored)).should eq(dasherized)
@@ -354,7 +354,7 @@ describe "Inflector" do
       end
     end
 
-    it "underscore_as_reverse_of_dasherize" do
+    describe "underscore_as_reverse_of_dasherize" do
       UnderscoresToDashes.each_key do |underscored|
         it "dasherizes and underscores back to original #{underscored}" do
           (Inflector.underscore(Inflector.dasherize(underscored))).should eq(underscored)
